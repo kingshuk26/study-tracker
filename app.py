@@ -61,6 +61,14 @@ def landing():
 
 
 
+@app.route("/init-db")
+def init_db():
+    with app.app_context():
+        db.create_all()
+    return "DB tables created successfully"
+
+
+
 # ---------------- LOGIN ROUTES ----------------
 from flask import url_for
 
