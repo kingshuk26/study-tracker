@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Authlib
+psycopg2-binary
+APScheduler
+python-telegram-bot==13.15
+requests
+gunicorn
