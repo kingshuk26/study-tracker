@@ -1,6 +1,7 @@
 import os
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+from types import SimpleNamespace
 
 from flask import Flask, render_template, request, redirect
 from models import db, User, Subject, Section, Topic, DailyLog
@@ -114,12 +115,14 @@ def profile():
 # 🔥 DASHBOARD (MOVED FROM / TO /dashboard)
 # =====================================================
 @app.route("/dashboard")
-#@login_required
-from types import SimpleNamespace
 def dashboard():
-    if not current_user.is_authenticated:
-    current_user.id = 1
 
+    # 🔥 TEMP FIX: fake logged-in user
+    if not current_user.is_authenticated:
+        fake_user = SimpleNamespace(id=1)
+        user_id = fake_user.id
+    else:
+        user_id = current_user.id
 
     selected_date = request.args.get("date")
 
@@ -129,7 +132,7 @@ def dashboard():
         selected_date = date.today()
 
     day = DailyLog.query.filter_by(
-        user_id=current_user.id,
+        user_id=user_id,
         date=selected_date
     ).first()
 
@@ -139,7 +142,7 @@ def dashboard():
         d = date.today() - timedelta(days=34 - i)
 
         log = DailyLog.query.filter_by(
-            user_id=current_user.id,
+            user_id=user_id,
             date=d
         ).first()
 
@@ -157,7 +160,7 @@ def dashboard():
         d = today - timedelta(days=i)
 
         log = DailyLog.query.filter_by(
-            user_id=current_user.id,
+            user_id=user_id,
             date=d
         ).first()
 
@@ -167,7 +170,7 @@ def dashboard():
             break
 
     # ---------------- ANALYTICS ----------------
-    logs = DailyLog.query.filter_by(user_id=current_user.id).all()
+    logs = DailyLog.query.filter_by(user_id=user_id).all()
 
     subject_stats = {
         "DSA": 0,
@@ -198,7 +201,7 @@ def dashboard():
         next_date=selected_date + timedelta(days=1),
         day=day,
         heatmap=heatmap,
-        subjects=Subject.query.filter_by(user_id=current_user.id).all(),
+        subjects=Subject.query.filter_by(user_id=user_id).all(),
         weekly=weekly,
         subject_stats=subject_stats
     )
