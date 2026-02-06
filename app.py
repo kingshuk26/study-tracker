@@ -115,7 +115,11 @@ def profile():
 # =====================================================
 @app.route("/dashboard")
 #@login_required
+from types import SimpleNamespace
 def dashboard():
+    if not current_user.is_authenticated:
+    current_user.id = 1
+
 
     selected_date = request.args.get("date")
 
