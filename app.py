@@ -58,9 +58,12 @@ def landing():
 
 
 # ---------------- LOGIN ROUTES ----------------
+from flask import url_for
+
 @app.route("/login")
 def login():
-    return google.authorize_redirect("http://127.0.0.1:5000/authorize")
+    redirect_uri = url_for("authorize", _external=True)
+    return google.authorize_redirect(redirect_uri)
 
 
 @app.route("/authorize")
