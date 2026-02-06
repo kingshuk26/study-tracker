@@ -4,11 +4,16 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from authlib.integrations.flask_client import OAuth
 from datetime import date, timedelta
 import threading
-from telegram_bot import run_bot
+
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 import os
 from dotenv import load_dotenv
+
+try:
+    from telegram_bot import run_bot
+except Exception:
+    run_bot = None    
 
 load_dotenv()
 
@@ -258,10 +263,10 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-    threading.Thread(target=run_bot, args=(app,), daemon=True).start()
+    #threading.Thread(target=run_bot, args=(app,), daemon=True).start()
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(send_reminders, 'cron', hour=21, minute=0)
-    scheduler.start()
+    #scheduler.start()
 
     app.run(debug=True, use_reloader=False)
