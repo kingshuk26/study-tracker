@@ -26,9 +26,14 @@
 
     <a href="{{ url_for('profile') }}" class="flex items-center gap-2 hover:underline">
         <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center">
-            {{ current_user.name[0] }}
+            {% if current_user.is_authenticated %}
+                {{ current_user.name[0] }}
+            {% else %}
+                G
+            {% endif %}
         </div>
-        {{ current_user.name }}
+        {{ current_user.name if current_user.is_authenticated else "Guest" }}
+
     </a>
 
 </header>
