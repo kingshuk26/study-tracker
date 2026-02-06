@@ -74,7 +74,7 @@ def login():
 def authorize():
     token = google.authorize_access_token()
 
-    resp = google.get("userinfo")
+    resp = google.get("https://www.googleapis.com/oauth2/v3/userinfo")
     user_info = resp.json()
 
     if not user_info:
@@ -93,6 +93,7 @@ def authorize():
 
     login_user(user)
     return redirect("/dashboard")
+
 
 
 
