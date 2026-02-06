@@ -1,3 +1,7 @@
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+
 from flask import Flask, render_template, request, redirect
 from models import db, User, Subject, Section, Topic, DailyLog
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -7,7 +11,7 @@ import threading
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
-import os
+
 from dotenv import load_dotenv
 
 try:
@@ -69,7 +73,12 @@ def login():
 @app.route("/authorize")
 def authorize():
     token = google.authorize_access_token()
-    user_info = token["userinfo"]
+
+    resp = google.get("userinfo")
+    user_info = resp.json()
+
+    if not user_info:
+        return "Failed to fetch user info", 400
 
     user = User.query.filter_by(email=user_info["email"]).first()
 
@@ -83,9 +92,8 @@ def authorize():
         db.session.commit()
 
     login_user(user)
-
-    # 🔥 redirect to dashboard (FIXED)
     return redirect("/dashboard")
+
 
 
 @app.route("/logout")
