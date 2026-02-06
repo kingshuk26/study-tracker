@@ -56,9 +56,8 @@ def load_user(user_id):
 # =====================================================
 @app.route("/")
 def landing():
-    if current_user.is_authenticated:
-        return redirect("/dashboard")
-    return render_template("landing.html")
+    return redirect("/dashboard")
+
 
 
 # ---------------- LOGIN ROUTES ----------------
@@ -115,7 +114,7 @@ def profile():
 # 🔥 DASHBOARD (MOVED FROM / TO /dashboard)
 # =====================================================
 @app.route("/dashboard")
-@login_required
+#@login_required
 def dashboard():
 
     selected_date = request.args.get("date")
