@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StudyOS Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="h-screen flex font-sans">
+
+<!-- ================= LEFT (SIGN IN) ================= -->
+<div class="w-1/2 flex items-center justify-center" style="background:#e1c09d;">
+
+    <div class="w-[420px] bg-white/90 backdrop-blur-md rounded-xl p-10 shadow-xl">
+
+        <!-- Title -->
+        <h1 class="text-4xl font-bold mb-3">Sign in</h1>
+
+        <p class="text-sm text-gray-700 mb-6">
+            New user?
+            <a href="/login" class="text-blue-600 font-medium underline">
+                Create an account
+            </a>
+        </p>
+
+
+        <!-- Email input -->
+        <label class="text-sm text-gray-700">Email address</label>
+        <input type="email"
+            placeholder="Enter your email"
+            class="w-full border-2 border-blue-500 rounded-lg p-3 mt-2 mb-4 focus:outline-none" />
+
+
+        <!-- Continue button -->
+        <a href="/login"
+           class="bg-blue-600 text-white px-6 py-3 rounded-lg w-full block text-center font-medium hover:bg-blue-700">
+           Continue
+        </a>
+
+
+        <!-- Divider -->
+        <div class="flex items-center my-6">
+            <div class="flex-1 border-t"></div>
+            <span class="px-3 text-gray-500 text-sm">Or</span>
+            <div class="flex-1 border-t"></div>
+        </div>
+
+
+        <!-- Google login -->
+        <a href="/login"
+           class="border rounded-xl p-3 flex items-center justify-center gap-3 bg-white hover:bg-gray-50">
+            🌐 Continue with Google
+        </a>
+
+        <div class="text-center text-xs text-gray-600 mt-4">
+            Secure OAuth login • No password needed
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= RIGHT (BRANDING) ================= -->
+<div class="w-1/2 flex items-center justify-center text-white" style="background:#9b6a31;">
+
+    <div class="text-center px-12">
+
+        <h1 class="text-6xl font-bold mb-6">Study Tracker</h1>
+
+        <p class="text-xl opacity-90 mb-10">
+            Track • Improve • Stay Consistent
+        </p>
+
+        <div class="space-y-4 text-lg opacity-90">
+            <p>🔥 Daily streak tracking</p>
+            <p>📊 Weekly analytics</p>
+            <p>📚 Study planner</p>
+            <p>🤖 Telegram reminders</p>
+
+            <p>
+                Built by <b>Kingshuk Das</b> |
+                <a href="https://github.com/kingshuk6" class="underline">GitHub</a>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

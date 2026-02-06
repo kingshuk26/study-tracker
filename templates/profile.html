@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto mt-8 space-y-10">
+
+<!-- ========= USER CARD ========= -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 flex justify-between items-center">
+
+    <div>
+        <h2 class="text-2xl font-bold">{{ current_user.name }}</h2>
+        <p class="text-gray-500">{{ current_user.email }}</p>
+    </div>
+
+</div>
+
+
+<!-- ========= MONTH GRID ========= -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+    <h3 class="font-semibold mb-4">📅 Monthly Progress</h3>
+
+    <div class="grid grid-cols-10 gap-2">
+
+        {% for level in grid %}
+        <div class="w-8 h-8 rounded
+            {% if level == 0 %}
+                bg-gray-200
+            {% elif level == 1 %}
+                bg-green-300
+            {% elif level == 2 %}
+                bg-green-500
+            {% else %}
+                bg-green-700
+            {% endif %}">
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- ========= SOCIAL LINKS ========= -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+
+    <h3 class="font-semibold mb-4">🔗 Developer Links</h3>
+
+    <form method="POST" action="/update-links" class="grid grid-cols-2 gap-4">
+
+        <input name="leetcode" placeholder="LeetCode URL" value="{{ current_user.leetcode }}" class="border p-2 rounded">
+        <input name="gfg" placeholder="GFG URL" value="{{ current_user.gfg }}" class="border p-2 rounded">
+        <input name="linkedin" placeholder="LinkedIn URL" value="{{ current_user.linkedin }}" class="border p-2 rounded">
+        <input name="github" placeholder="GitHub URL" value="{{ current_user.github }}" class="border p-2 rounded">
+
+        <button class="col-span-2 bg-blue-600 text-white py-2 rounded">
+            Save Links
+        </button>
+
+    </form>
+
+</div>
+
+</div>
+
+{% endblock %}

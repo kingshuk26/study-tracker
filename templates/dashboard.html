@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<!-- ================= WEEKLY SUMMARY ================= -->
+<div class="grid grid-cols-4 gap-6 mb-10">
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow text-center">
+        <p class="text-sm text-gray-500">🔥 Streak</p>
+        <p class="text-2xl font-bold text-orange-500">{{ streak }} days</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow text-center">
+        <p class="text-sm text-gray-500">📅 This Week</p>
+        <p class="text-2xl font-bold text-blue-500">{{ weekly_done }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow text-center">
+        <p class="text-sm text-gray-500">✅ Total Done</p>
+        <p class="text-2xl font-bold text-green-500">{{ total_done }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow text-center">
+        <p class="text-sm text-gray-500">📈 Completion</p>
+        <p class="text-2xl font-bold text-purple-500">{{ completion_rate }}%</p>
+    </div>
+
+</div>
+
+
+<h1 class="text-3xl font-bold mb-8">📅 Daily Tracker</h1>
+
+
+<!-- GRID LAYOUT -->
+<div class="grid grid-cols-3 gap-8 ">
+
+    <!-- ========= TODAY CARD ========= -->
+    <div class="col-span-2">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-7">
+
+            <h2 class="text-xl font-semibold mb-6">
+                Today — {{ selected_date }}
+            </h2>
+
+            <form method="POST" action="/save-day" class="space-y-4 text-lg">
+
+                <input type="hidden" name="date" value="{{ selected_date }}">
+
+                {% for label, key in [
+                    ('DSA','dsa'),
+                    ('Aptitude','aptitude'),
+                    ('Development','dev'),
+                    ('Project','project')
+                ] %}
+
+                <label class="flex justify-between items-center">
+                    {{ label }}
+                    <input type="checkbox" name="{{ key }}"
+                        {% if day and getattr(day, key) %}checked{% endif %}
+                        class="scale-125 accent-blue-600">
+                </label>
+
+                {% endfor %}
+
+                <div class="mt-6">
+                    <p class="text-sm mb-2 font-semibold">📝 Notes</p>
+
+                    <textarea
+                        name="notes"
+                        rows="3"
+                        placeholder="What did you study today?"
+                        class="w-full border rounded-lg p-3 dark:bg-gray-900"
+                    >{{ day.notes if day else "" }}</textarea>
+                </div>
+
+                <div class="flex justify-between mt-6">
+
+                    <a href="/?date={{ prev_date }}"
+                       class="bg-gray-200 px-4 py-2 rounded">
+                       ← Prev
+                    </a>
+
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded">
+                        Save
+                    </button>
+
+                    <a href="/?date={{ next_date }}"
+                       class="bg-blue-600 text-white px-4 py-2 rounded">
+                       Next →
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ========= HEATMAP ========= -->
+    <div>
+
+        <h3 class="font-semibold mb-4">🔥 Streak</h3>
+
+        <div class="grid grid-cols-7 gap-2">
+
+            {% for d in heatmap %}
+            <div class="w-6 h-6 rounded
+                {% if d.level == 0 %}
+                    bg-gray-200 dark:bg-gray-700
+                {% elif d.level == 1 %}
+                    bg-green-300
+                {% elif d.level == 2 %}
+                    bg-green-500
+                {% else %}
+                    bg-green-700
+                {% endif %}">
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- ================= ANALYTICS ================= -->
+
+<h2 class="text-2xl font-bold mt-12 mb-6">📊 Analytics</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow h-72">
+        <canvas id="weeklyChart"></canvas>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow h-72">
+        <canvas id="subjectChart"></canvas>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow h-72 flex items-center justify-center">
+        <canvas id="donut" style="max-height:220px;"></canvas>
+    </div>
+
+</div>
+
+
+
+<!-- ================= CHARTS SCRIPT (FIXED) ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const weeklyData = {{ weekly|tojson }}
+const subjectData = {{ subject_stats|tojson }}
+const completion = {{ completion_rate }}
+
+new Chart(document.getElementById("weeklyChart"), {
+    type: 'line',
+    data: {
+        labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+        datasets: [{
+            label: "Daily Tasks",
+            data: weeklyData,
+            borderColor: "#3b82f6",
+            backgroundColor: "rgba(59,130,246,0.2)",
+            fill: true
+        }]
+    }
+})
+
+new Chart(document.getElementById("subjectChart"), {
+    type: 'bar',
+    data: {
+        labels: Object.keys(subjectData),
+        datasets: [{
+            data: Object.values(subjectData),
+            backgroundColor: "#60a5fa"
+        }]
+    }
+})
+
+new Chart(document.getElementById("donut"), {
+    type: 'doughnut',
+    data: {
+        labels: ["Done","Remaining"],
+        datasets: [{
+            data: [completion, 100-completion],
+            backgroundColor: ["#1815e2","#de1245"]
+        }]
+    }
+})
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>StudyOS</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class"
+        }
+    </script>
+
+</head>
+
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+
+
+<!-- ================= NAVBAR ================= -->
+<header class="h-16 bg-white dark:bg-gray-800 shadow flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50">
+
+    <h1 class="text-xl font-bold text-blue-600">Study Tracker</h1>
+
+    <a href="{{ url_for('profile') }}" class="flex items-center gap-2 hover:underline">
+        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center">
+            {{ current_user.name[0] }}
+        </div>
+        {{ current_user.name }}
+    </a>
+
+</header>
+
+
+
+
+
+<!-- ================= MAIN WRAPPER ================= -->
+<div class="flex pt-16 min-h-screen">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="w-64 bg-white dark:bg-gray-800 shadow p-5 space-y-6 flex flex-col">
+
+        <div>
+            <h2 class="font-semibold text-lg">Subjects</h2>
+
+            <form method="POST" action="/add-subject" class="space-y-2 mt-3">
+                <input name="name" placeholder="Add subject"
+                    class="w-full border p-2 rounded text-gray-900 dark:text-white bg-white dark:bg-gray-700">
+                <button class="w-full bg-blue-600 text-white p-2 rounded">Add</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <!-- ================= THEME TOGGLE SWITCH ================= -->
+        <div class="flex justify-center mt-6">
+
+            <button id="themeToggle"
+                class="w-20 h-10 rounded-full bg-gray-300 dark:bg-gray-700 relative transition-all duration-300">
+
+                <div id="toggleCircle"
+                    class="absolute left-1 top-1 w-8 h-8 rounded-full bg-white flex items-center justify-center text-sm transition-all duration-300">
+                    🌙
+                </div>
+
+            </button>
+
+        </div>
+
+                <!-- ================= LOGOUT BUTTON ================= -->
+        <a href="/logout"
+        class="w-full text-center bg-red-500 hover:bg-red-600 text-white py-2 rounded mt-4 transition">
+        🚪 Logout
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- ================= CONTENT ================= -->
+    <main class="flex-1 p-8">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-white dark:bg-gray-800 text-center p-4 shadow mt-auto">
+
+    Built  by <b>Kingshuk Das</b> |
+    <a href="https://github.com/kingshuk6" class="text-blue-500">GitHub</a>
+
+</footer>
+
+
+
+<!-- ================= THEME SCRIPT ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const root = document.documentElement
+    const toggleBtn = document.getElementById("themeToggle")
+    const circle = document.getElementById("toggleCircle")
+
+    function setDark() {
+        root.classList.add("dark")
+        circle.style.transform = "translateX(40px)"
+        circle.innerHTML = "☀️"
+        localStorage.setItem("theme", "dark")
+    }
+
+    function setLight() {
+        root.classList.remove("dark")
+        circle.style.transform = "translateX(0px)"
+        circle.innerHTML = "🌙"
+        localStorage.setItem("theme", "light")
+    }
+
+    toggleBtn.onclick = () =>
+        root.classList.contains("dark") ? setLight() : setDark()
+
+    // load saved
+    localStorage.getItem("theme") === "dark" ? setDark() : setLight()
+})
+
+</script>
+
+
+</body>
+</html>
